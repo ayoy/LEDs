@@ -46,4 +46,22 @@ enum ColorPicker
             let errorString: String?
         }
     }
+
+    enum CurrentColor
+    {
+        struct Request
+        {
+        }
+        
+        struct Response
+        {
+            let colorJSON: [String:Int]
+        }
+        
+        struct ViewModel
+        {
+            let color: UIColor
+            let errorString: String?
+        }
+    }
 }

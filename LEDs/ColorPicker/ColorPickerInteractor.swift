@@ -14,7 +14,7 @@ import UIKit
 
 protocol ColorPickerBusinessLogic
 {
-    func doSomething(request: ColorPicker.Something.Request)
+    func fetchCurrentColor(request: ColorPicker.CurrentColor.Request)
     func updateColor(request: ColorPicker.UpdateColor.Request)
 }
 
@@ -30,11 +30,13 @@ class ColorPickerInteractor: NSObject, ColorPickerBusinessLogic, ColorPickerData
     
     // MARK: Do something
     
-    func doSomething(request: ColorPicker.Something.Request) {
-        worker.doSomeWork()
-        
-        let response = ColorPicker.Something.Response()
-        presenter?.presentSomething(response: response)
+    func fetchCurrentColor(request: ColorPicker.CurrentColor.Request) {
+        worker.getColor { [weak self] (json) in
+            guard let strongSelf = self else { return }
+
+            let response = ColorPicker.CurrentColor.Response(colorJSON: json)
+            strongSelf.presenter?.computeCurrentColor(response: response)
+        }
     }
     
     func updateColor(request: ColorPicker.UpdateColor.Request) {

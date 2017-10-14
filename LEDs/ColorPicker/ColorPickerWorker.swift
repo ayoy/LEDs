@@ -50,6 +50,36 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
         
     }
     
+    func getColor(_ completionHandler: @escaping ([String:Int]) -> Void) {
+
+        if !isTaskInProgress {
+            let url = URL(string: "https://rpi.local/get_color")!
+            let task = urlSession.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
+                if let error = error {
+                    print(error)
+                    DispatchQueue.main.async {
+                        completionHandler([:])
+                    }
+                } else if let data = data {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data, options: [])
+                        DispatchQueue.main.async {
+                            completionHandler(json as? [String:Int] ?? [:])
+                        }
+                    } catch (let error) {
+                        print("JSON deserialization error: \(error)")
+                        DispatchQueue.main.async {
+                            completionHandler([:])
+                        }
+                    }
+                }
+                self.isTaskInProgress = false
+            }
+            task.resume()
+            isTaskInProgress = true
+        }
+    }
+    
     func setColor(_ color: UIColor) {
         
         if !isTaskInProgress {

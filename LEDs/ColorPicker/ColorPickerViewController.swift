@@ -15,7 +15,7 @@ import Color_Picker_for_iOS
 
 protocol ColorPickerDisplayLogic: class
 {
-    func displaySomething(viewModel: ColorPicker.Something.ViewModel)
+    func displayCurrentColor(viewModel: ColorPicker.CurrentColor.ViewModel)
 }
 
 class ColorPickerViewController: UIViewController, ColorPickerDisplayLogic
@@ -72,11 +72,7 @@ class ColorPickerViewController: UIViewController, ColorPickerDisplayLogic
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        doSomething()
-        colorPickerView.color = .red
-        colorPickerView.addTarget(self,
-                                  action: #selector(colorPickerDidChange(_:)),
-                                  for: .valueChanged)
+        fetchCurrentColor()
     }
     
     @objc private func colorPickerDidChange(_ colorPicker: HRColorPickerView) {
@@ -89,14 +85,15 @@ class ColorPickerViewController: UIViewController, ColorPickerDisplayLogic
     
     //@IBOutlet weak var nameTextField: UITextField!
     
-    func doSomething()
-    {
-        let request = ColorPicker.Something.Request()
-        interactor?.doSomething(request: request)
+    func fetchCurrentColor() {
+        let request = ColorPicker.CurrentColor.Request()
+        interactor?.fetchCurrentColor(request: request)
+        colorPickerView.addTarget(self,
+                                  action: #selector(colorPickerDidChange(_:)),
+                                  for: .valueChanged)
     }
     
-    func displaySomething(viewModel: ColorPicker.Something.ViewModel)
-    {
-        //nameTextField.text = viewModel.name
+    func displayCurrentColor(viewModel: ColorPicker.CurrentColor.ViewModel) {
+        colorPickerView.color = viewModel.color
     }
 }

@@ -14,7 +14,7 @@ import UIKit
 
 protocol ColorPickerPresentationLogic
 {
-    func presentSomething(response: ColorPicker.Something.Response)
+    func computeCurrentColor(response: ColorPicker.CurrentColor.Response)
 }
 
 class ColorPickerPresenter: ColorPickerPresentationLogic
@@ -23,9 +23,13 @@ class ColorPickerPresenter: ColorPickerPresentationLogic
     
     // MARK: Do something
     
-    func presentSomething(response: ColorPicker.Something.Response)
-    {
-        let viewModel = ColorPicker.Something.ViewModel()
-        viewController?.displaySomething(viewModel: viewModel)
+    func computeCurrentColor(response: ColorPicker.CurrentColor.Response) {
+        let color = UIColor(red: CGFloat(response.colorJSON["red"] ?? 0)/255,
+                            green: CGFloat(response.colorJSON["green"] ?? 0)/255,
+                            blue: CGFloat(response.colorJSON["blue"] ?? 0)/255,
+                            alpha: 1)
+        let viewModel = ColorPicker.CurrentColor.ViewModel(color: color, errorString: nil)
+
+        viewController?.displayCurrentColor(viewModel: viewModel)
     }
 }
