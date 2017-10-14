@@ -120,7 +120,7 @@ typedef struct timeval timeval;
 - (UIControl <HRBrightnessSlider> *)brightnessSlider {
     if (!_brightnessSlider) {
         _brightnessSlider = [[HRBrightnessSlider alloc] init];
-        _brightnessSlider.brightnessLowerLimit = @0.4;
+        _brightnessSlider.brightnessLowerLimit = @0;
         _brightnessSlider.color = self.color;
         [_brightnessSlider addTarget:self
                               action:@selector(brightnessChanged:)
@@ -142,7 +142,7 @@ typedef struct timeval timeval;
     if (!_colorMapView) {
         HRColorMapView *colorMapView;
         colorMapView = [HRColorMapView colorMapWithFrame:CGRectZero
-                                    saturationUpperLimit:0.9];
+                                    saturationUpperLimit:0.5];
         colorMapView.tileSize = @16;
         _colorMapView = colorMapView;
 
