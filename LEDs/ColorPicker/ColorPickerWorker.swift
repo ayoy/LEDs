@@ -53,7 +53,7 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
     func getColor(_ completionHandler: @escaping ([String:Int]) -> Void) {
 
         if !isTaskInProgress {
-            let url = URL(string: "https://rpi.local/get_color")!
+            let url = URL(string: "https://zero.local/get_color")!
             let task = urlSession.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
                 if let error = error {
                     print(error)
@@ -85,7 +85,7 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
         if !isTaskInProgress {
             let query = queryString(with: color)
             
-            let url = URL(string: "https://rpi.local/color\(query)")!
+            let url = URL(string: "https://zero.local/color\(query)")!
             let task = urlSession.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
                 if let error = error {
                     print(error)
@@ -112,7 +112,7 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void)
     {
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            if challenge.protectionSpace.host == "rpi.local" {
+            if challenge.protectionSpace.host == "zero.local" {
                 
                 if let certFile = Bundle.main.path(forResource: "cert", ofType: "der"),
                     let data = try? Data(contentsOf: URL(fileURLWithPath: certFile)),

@@ -38,14 +38,14 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>rpi.local</key>
-            <dict>
-                <key>NSIncludesSubdomains</key>
-                <true/>
-                <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-                <true/>
-            </dict>
-        </dict>
+			<key>zero.local</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
