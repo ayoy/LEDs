@@ -60,118 +60,63 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
             }
         }
     }
-
-    private func queryString(with color: UIColor) -> String {
-        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
-        color.getRed(&r, green: &g, blue: &b, alpha: nil)
-        
-        let redString = String(Int(r*255))
-            .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-        let greenString = String(Int(g*255))
-            .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-        let blueString = String(Int(b*255))
-            .addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-
-        return "?r=\(redString)&g=\(greenString)&b=\(blueString)"
-        
+    
+    func connect(_ completionHandler: ((Error?) -> Void)) {
+        if socket == nil {
+            socket = TCPClient(address: "192.168.1.101", port: 4000)
+            switch socket!.connect(timeout: 30) {
+            case .success:
+                completionHandler(nil)
+                break
+                
+            case .failure(let error):
+                NSLog("failed to connect: \(error)")
+                completionHandler(error)
+            }
+        }
     }
     
-    func getColor(_ completionHandler: @escaping ([String:Int]) -> Void) {
+    func getColor(_ completionHandler: @escaping (UInt8, UInt8, UInt8) -> Void) {
 
-        if !isTaskInProgress {
-            let url = URL(string: "https://zero.local/get_color")!
-            let task = urlSession.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-                if let error = error {
-                    print(error)
-                    DispatchQueue.main.async {
-                        completionHandler([:])
-                    }
-                } else if let data = data {
-                    do {
-                        let json = try JSONSerialization.jsonObject(with: data, options: [])
-                        DispatchQueue.main.async {
-                            completionHandler(json as? [String:Int] ?? [:])
-                        }
-                    } catch (let error) {
-                        print("JSON deserialization error: \(error)")
-                        DispatchQueue.main.async {
-                            completionHandler([:])
-                        }
-                    }
-                }
-                self.isTaskInProgress = false
+        if socket == nil {
+            socket = TCPClient(address: "192.168.1.101", port: 4000)
+            switch socket!.connect(timeout: 30) {
+            case .success:
+                break
+                
+            case .failure(let error):
+                NSLog("failed to connect: \(error)")
             }
-            task.resume()
-            isTaskInProgress = true
         }
+        
+        _ = socket?.send(string: "WAT")
+        let bytes = socket?.read(3, timeout: 5)
+        if let bytes = bytes, bytes.count == 3 {
+            completionHandler(bytes[0], bytes[1], bytes[2])
+        } else {
+            completionHandler(0, 0, 0)
+        }
+        socket?.close()
+        socket = nil
     }
     
     func setColor(_ color: UIColor) {
-        
-//        if !isTaskInProgress {
-//            let query = queryString(with: color)
-//
-//            let url = URL(string: "https://zero.local/color\(query)")!
-//            let task = urlSession.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-//                if let error = error {
-//                    print(error)
-//                }
-//                self.isTaskInProgress = false
-//            }
-//            task.resume()
-//            isTaskInProgress = true
-//
-//        }
-
-//        synchronized(self) { () -> Void in
-        
-            if socket == nil {
-                socket = TCPClient(address: "192.168.1.101", port: 4000)
-                switch socket!.connect(timeout: 30) {
-                case .success:
-                    break
-                    
-                case .failure(let error):
-                    NSLog("failed to connect: \(error)")
-                }
-            }
-            
-            _ = socket?.send(data: color.hexData)
-            socket?.close()
-            socket = nil
-//        }
-    }
-    
-    private lazy var urlSession: URLSession = {
-        let configuration = URLSessionConfiguration.default
-        return URLSession(configuration: configuration,
-                          delegate: self,
-                          delegateQueue: workerQueue)
-    }()
-    
-    private let workerQueue = OperationQueue()
-    
-    func urlSession(_ session: URLSession,
-                    didReceive challenge: URLAuthenticationChallenge,
-                    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void)
-    {
-        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            if challenge.protectionSpace.host == "zero.local" {
+        if socket == nil {
+            socket = TCPClient(address: "192.168.1.101", port: 4000)
+            switch socket!.connect(timeout: 30) {
+            case .success:
+                break
                 
-                if let certFile = Bundle.main.path(forResource: "cert", ofType: "der"),
-                    let data = try? Data(contentsOf: URL(fileURLWithPath: certFile)),
-                    let cert = SecCertificateCreateWithData(nil, data as CFData),
-                    let trust = challenge.protectionSpace.serverTrust
-                {
-                    SecTrustSetAnchorCertificates(trust, [cert] as CFArray)
-                    completionHandler(.useCredential, URLCredential(trust: trust))
-                } else {
-                    completionHandler(.cancelAuthenticationChallenge, nil)
-                }
-            } else {
-                completionHandler(.performDefaultHandling, nil)
+            case .failure(let error):
+                NSLog("failed to connect: \(error)")
             }
         }
+        
+        var data = "DIS".data(using: .utf8)!
+        data.append(color.hexData)
+        _ = socket?.send(data: data)
+        socket?.close()
+        socket = nil
     }
 
 }

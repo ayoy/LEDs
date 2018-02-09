@@ -55,7 +55,9 @@ enum ColorPicker
         
         struct Response
         {
-            let colorJSON: [String:Int]
+            let red: UInt8
+            let green: UInt8
+            let blue: UInt8
         }
         
         struct ViewModel

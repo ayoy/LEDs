@@ -24,9 +24,9 @@ class ColorPickerPresenter: ColorPickerPresentationLogic
     // MARK: Do something
     
     func computeCurrentColor(response: ColorPicker.CurrentColor.Response) {
-        let color = UIColor(red: CGFloat(response.colorJSON["red"] ?? 0)/255,
-                            green: CGFloat(response.colorJSON["green"] ?? 0)/255,
-                            blue: CGFloat(response.colorJSON["blue"] ?? 0)/255,
+        let color = UIColor(red: CGFloat(response.red)/255,
+                            green: CGFloat(response.green)/255,
+                            blue: CGFloat(response.blue)/255,
                             alpha: 1)
         let viewModel = ColorPicker.CurrentColor.ViewModel(color: color, errorString: nil)
 

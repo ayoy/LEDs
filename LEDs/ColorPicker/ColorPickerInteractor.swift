@@ -31,10 +31,10 @@ class ColorPickerInteractor: NSObject, ColorPickerBusinessLogic, ColorPickerData
     // MARK: Do something
     
     func fetchCurrentColor(request: ColorPicker.CurrentColor.Request) {
-        worker.getColor { [weak self] (json) in
+        worker.getColor { [weak self] (r, g, b) in
             guard let strongSelf = self else { return }
 
-            let response = ColorPicker.CurrentColor.Response(colorJSON: json)
+            let response = ColorPicker.CurrentColor.Response(red: r, green: g, blue: b)
             strongSelf.presenter?.computeCurrentColor(response: response)
         }
     }
