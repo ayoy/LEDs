@@ -7,6 +7,7 @@ target 'LEDs' do
 
   # Pods for LEDs
   pod 'Color-Picker-for-iOS'
+  pod 'SwiftSocket'
 
   target 'LEDsTests' do
     inherit! :search_paths

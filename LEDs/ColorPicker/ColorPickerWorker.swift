@@ -11,9 +11,39 @@
 //
 
 import UIKit
+import SwiftSocket
+
+func synchronized<T>(_ lock: AnyObject, _ body: () throws -> T) rethrows -> T {
+    objc_sync_enter(lock)
+    defer { objc_sync_exit(lock) }
+    return try body()
+}
+
+extension UIColor {
+    var hexData: Data {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        
+        self.getRed(&r, green: &g, blue: &b, alpha: &a)
+        
+        r = max(0, min(1, r))
+        g = max(0, min(1, g))
+        b = max(0, min(1, b))
+
+        var data = Data()
+        data.append(UInt8(r * 0xff))
+        data.append(UInt8(g * 0xff))
+        data.append(UInt8(b * 0xff))
+        return data
+    }
+}
 
 class ColorPickerWorker: NSObject, URLSessionDelegate
 {
+    private var socket: TCPClient? = nil
+    
     private let instanceMutex = PThreadMutex(type: .recursive)
     private var _isTaskInProgress: Bool = false
     var isTaskInProgress: Bool {
@@ -31,10 +61,6 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
         }
     }
 
-    func doSomeWork()
-    {
-    }
-    
     private func queryString(with color: UIColor) -> String {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
         color.getRed(&r, green: &g, blue: &b, alpha: nil)
@@ -82,20 +108,38 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
     
     func setColor(_ color: UIColor) {
         
-        if !isTaskInProgress {
-            let query = queryString(with: color)
-            
-            let url = URL(string: "https://zero.local/color\(query)")!
-            let task = urlSession.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-                if let error = error {
-                    print(error)
-                }
-                self.isTaskInProgress = false
-            }
-            task.resume()
-            isTaskInProgress = true
-        }
+//        if !isTaskInProgress {
+//            let query = queryString(with: color)
+//
+//            let url = URL(string: "https://zero.local/color\(query)")!
+//            let task = urlSession.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
+//                if let error = error {
+//                    print(error)
+//                }
+//                self.isTaskInProgress = false
+//            }
+//            task.resume()
+//            isTaskInProgress = true
+//
+//        }
 
+//        synchronized(self) { () -> Void in
+        
+            if socket == nil {
+                socket = TCPClient(address: "192.168.1.101", port: 4000)
+                switch socket!.connect(timeout: 30) {
+                case .success:
+                    break
+                    
+                case .failure(let error):
+                    NSLog("failed to connect: \(error)")
+                }
+            }
+            
+            _ = socket?.send(data: color.hexData)
+            socket?.close()
+            socket = nil
+//        }
     }
     
     private lazy var urlSession: URLSession = {

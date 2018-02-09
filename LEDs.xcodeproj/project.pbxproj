@@ -289,10 +289,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-LEDs/Pods-LEDs-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Color-Picker-for-iOS/Color_Picker_for_iOS.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftSocket/SwiftSocket.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Color_Picker_for_iOS.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

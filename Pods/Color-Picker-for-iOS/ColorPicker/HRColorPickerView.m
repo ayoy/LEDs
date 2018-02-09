@@ -143,7 +143,7 @@ typedef struct timeval timeval;
         HRColorMapView *colorMapView;
         colorMapView = [HRColorMapView colorMapWithFrame:CGRectZero
                                     saturationUpperLimit:0.5];
-        colorMapView.tileSize = @16;
+        colorMapView.tileSize = @1;
         _colorMapView = colorMapView;
 
         _colorMapView.brightness = _currentHsvColor.v;

@@ -292,7 +292,7 @@
     [CATransaction begin];
     [CATransaction setValue:(id) kCFBooleanTrue
                      forKey:kCATransactionDisableActions];
-    self.colorMapLayer.opacity = _brightness;
+    self.colorMapLayer.opacity = MIN(1, brightness + 0.3);;
     [CATransaction commit];
 }
 
