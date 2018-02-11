@@ -14,32 +14,38 @@ import UIKit
 
 protocol ColorPickerBusinessLogic
 {
-    func fetchCurrentColor(request: ColorPicker.CurrentColor.Request)
+    func fetchCurrentState(request: ColorPicker.CurrentState.Request)
     func updateColor(request: ColorPicker.UpdateColor.Request)
+    func updateMotionSensorState(request: ColorPicker.UpdateMotionSensorState.Request)
 }
 
 protocol ColorPickerDataStore
 {
-    //var name: String { get set }
+    var state: ColorPicker.LEDState { get set }
 }
 
 class ColorPickerInteractor: NSObject, ColorPickerBusinessLogic, ColorPickerDataStore
 {
     var presenter: ColorPickerPresentationLogic?
     var worker: ColorPickerWorker = ColorPickerWorker()
+    var state: ColorPicker.LEDState = .uninitialized
     
     // MARK: Do something
     
-    func fetchCurrentColor(request: ColorPicker.CurrentColor.Request) {
-        worker.getColor { [weak self] (r, g, b) in
+    func fetchCurrentState(request: ColorPicker.CurrentState.Request) {
+        worker.getCurrentState { [weak self] (r, g, b, isMotionEnabled) in
             guard let strongSelf = self else { return }
 
-            let response = ColorPicker.CurrentColor.Response(red: r, green: g, blue: b)
-            strongSelf.presenter?.computeCurrentColor(response: response)
+            let response = ColorPicker.CurrentState.Response(red: r, green: g, blue: b, isMotionSensorEnabled: isMotionEnabled)
+            strongSelf.presenter?.computeCurrentState(response: response)
         }
     }
     
     func updateColor(request: ColorPicker.UpdateColor.Request) {
         worker.setColor(request.color)
+    }
+    
+    func updateMotionSensorState(request: ColorPicker.UpdateMotionSensorState.Request) {
+        worker.setMotionSensorEnabled(request.isEnabled)
     }
 }

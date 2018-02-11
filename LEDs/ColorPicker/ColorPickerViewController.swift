@@ -15,12 +15,13 @@ import Color_Picker_for_iOS
 
 protocol ColorPickerDisplayLogic: class
 {
-    func displayCurrentColor(viewModel: ColorPicker.CurrentColor.ViewModel)
+    func displayCurrentState(viewModel: ColorPicker.CurrentState.ViewModel)
 }
 
 class ColorPickerViewController: UIViewController, ColorPickerDisplayLogic
 {
     @IBOutlet private weak var colorPickerView: HRColorPickerView!
+    @IBOutlet private weak var motionSensorSwitch: UISwitch!
 
     var interactor: ColorPickerBusinessLogic?
     var router: (NSObjectProtocol & ColorPickerRoutingLogic & ColorPickerDataPassing)?
@@ -72,28 +73,48 @@ class ColorPickerViewController: UIViewController, ColorPickerDisplayLogic
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        fetchCurrentColor()
+        fetchCurrentState()
     }
     
-    @objc private func colorPickerDidChange(_ colorPicker: HRColorPickerView) {
+    @IBAction private func colorPickerDidChange(_ colorPicker: HRColorPickerView) {
         if let color = colorPicker.color {
             interactor?.updateColor(request: ColorPicker.UpdateColor.Request(color: color))
         }
     }
-    
+
+    @IBAction private func motionSensorSwitchDidChange(_ sender: UISwitch) {
+        interactor?.updateMotionSensorState(request:
+            ColorPicker.UpdateMotionSensorState.Request(isEnabled: sender.isOn))
+    }
+
     // MARK: Do something
     
     //@IBOutlet weak var nameTextField: UITextField!
     
-    func fetchCurrentColor() {
-        let request = ColorPicker.CurrentColor.Request()
-        interactor?.fetchCurrentColor(request: request)
+    func fetchCurrentState() {
+        let request = ColorPicker.CurrentState.Request()
+        interactor?.fetchCurrentState(request: request)
         colorPickerView.addTarget(self,
                                   action: #selector(colorPickerDidChange(_:)),
                                   for: .valueChanged)
     }
     
-    func displayCurrentColor(viewModel: ColorPicker.CurrentColor.ViewModel) {
+    func displayCurrentState(viewModel: ColorPicker.CurrentState.ViewModel) {
         colorPickerView.color = viewModel.color
+        motionSensorSwitch.isOn = viewModel.isMotionSensorEnabled
     }
+
+    // MARK -
+
+    @IBAction func didCancelSchedule(_ segue: UIStoryboardSegue) {
+//        periodPicker.selectedPeriod = period
+    }
+
+    @IBAction func didAdjustSchedule(_ segue: UIStoryboardSegue) {
+        if let scheduleVC = segue.source as? ScheduleViewController {
+//            period = .custom(startDate: customPeriodVC.startDate,
+//                             endDate: customPeriodVC.endDate)
+        }
+    }
+
 }

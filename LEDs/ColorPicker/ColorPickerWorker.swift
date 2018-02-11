@@ -76,7 +76,7 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
         }
     }
     
-    func getColor(_ completionHandler: @escaping (UInt8, UInt8, UInt8) -> Void) {
+    func getCurrentState(_ completionHandler: @escaping (UInt8, UInt8, UInt8, Bool) -> Void) {
 
         if socket == nil {
             socket = TCPClient(address: "192.168.1.101", port: 4000)
@@ -90,11 +90,12 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
         }
         
         _ = socket?.send(string: "WAT")
-        let bytes = socket?.read(3, timeout: 5)
-        if let bytes = bytes, bytes.count == 3 {
-            completionHandler(bytes[0], bytes[1], bytes[2])
+        let payloadSize = 4
+        let bytes = socket?.read(payloadSize, timeout: 5)
+        if let bytes = bytes, bytes.count == payloadSize {
+            completionHandler(bytes[0], bytes[1], bytes[2], bytes[3] != 0)
         } else {
-            completionHandler(0, 0, 0)
+            completionHandler(0, 0, 0, false)
         }
         socket?.close()
         socket = nil
@@ -119,4 +120,22 @@ class ColorPickerWorker: NSObject, URLSessionDelegate
         socket = nil
     }
 
+    func setMotionSensorEnabled(_ isEnabled: Bool) {
+        if socket == nil {
+            socket = TCPClient(address: "192.168.1.101", port: 4000)
+            switch socket!.connect(timeout: 30) {
+            case .success:
+                break
+                
+            case .failure(let error):
+                NSLog("failed to connect: \(error)")
+            }
+        }
+        
+        var data = "FAD".data(using: .utf8)!
+        data.append(isEnabled ? 1 : 0)
+        _ = socket?.send(data: data)
+        socket?.close()
+        socket = nil
+    }
 }

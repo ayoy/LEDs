@@ -16,6 +16,7 @@
 		372A7AF11F9263350014813A /* ColorPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A7AEA1F9262300014813A /* ColorPickerPresenter.swift */; };
 		372A7AF21F9263350014813A /* ColorPickerWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A7AEB1F9262300014813A /* ColorPickerWorker.swift */; };
 		372A7AF41F926A420014813A /* CwlMutex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A7AF31F926A420014813A /* CwlMutex.swift */; };
+		37507B9A20304AC300522E5C /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37507B9920304AC300522E5C /* ScheduleViewController.swift */; };
 		379480021F9258AF0011DFF0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379480011F9258AF0011DFF0 /* AppDelegate.swift */; };
 		379480071F9258AF0011DFF0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 379480051F9258AF0011DFF0 /* Main.storyboard */; };
 		379480091F9258AF0011DFF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 379480081F9258AF0011DFF0 /* Assets.xcassets */; };
@@ -43,6 +44,7 @@
 		372A7AEB1F9262300014813A /* ColorPickerWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWorker.swift; sourceTree = "<group>"; };
 		372A7AEC1F9262300014813A /* ColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewController.swift; sourceTree = "<group>"; };
 		372A7AF31F926A420014813A /* CwlMutex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CwlMutex.swift; sourceTree = "<group>"; };
+		37507B9920304AC300522E5C /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		37947FFE1F9258AF0011DFF0 /* LEDs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LEDs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		379480011F9258AF0011DFF0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		379480061F9258AF0011DFF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -100,6 +102,14 @@
 			path = ColorPicker;
 			sourceTree = "<group>";
 		};
+		37507B8C203048EE00522E5C /* Schedule */ = {
+			isa = PBXGroup;
+			children = (
+				37507B9920304AC300522E5C /* ScheduleViewController.swift */,
+			);
+			path = Schedule;
+			sourceTree = "<group>";
+		};
 		37947FF51F9258AF0011DFF0 = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +136,7 @@
 				379480011F9258AF0011DFF0 /* AppDelegate.swift */,
 				372A7AF31F926A420014813A /* CwlMutex.swift */,
 				372A7AE61F9262300014813A /* ColorPicker */,
+				37507B8C203048EE00522E5C /* Schedule */,
 				379480051F9258AF0011DFF0 /* Main.storyboard */,
 				379480081F9258AF0011DFF0 /* Assets.xcassets */,
 				3794800A1F9258AF0011DFF0 /* LaunchScreen.storyboard */,
@@ -370,6 +381,7 @@
 				372A7AEE1F9263350014813A /* ColorPickerModels.swift in Sources */,
 				372A7AF21F9263350014813A /* ColorPickerWorker.swift in Sources */,
 				372A7AF41F926A420014813A /* CwlMutex.swift in Sources */,
+				37507B9A20304AC300522E5C /* ScheduleViewController.swift in Sources */,
 				372A7AED1F9263350014813A /* ColorPickerViewController.swift in Sources */,
 				372A7AF11F9263350014813A /* ColorPickerPresenter.swift in Sources */,
 				372A7AEF1F9263350014813A /* ColorPickerInteractor.swift in Sources */,

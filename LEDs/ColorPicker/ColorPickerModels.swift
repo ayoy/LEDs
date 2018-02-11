@@ -14,6 +14,24 @@ import UIKit
 
 enum ColorPicker
 {
+    struct LEDState {
+        let color: UIColor
+        let motionSensor: MotionSensor
+        
+        struct MotionSensor {
+            let isEnabled: Bool
+            let isScheduleEnabled: Bool
+            let scheduledStart: DateComponents?
+            let scheduledEnd: DateComponents?
+        }
+        
+        static let uninitialized = LEDState(color: .black,
+                                            motionSensor: MotionSensor(isEnabled: false,
+                                                                       isScheduleEnabled: false,
+                                                                       scheduledStart: nil,
+                                                                       scheduledEnd: nil))
+    }
+    
     // MARK: Use cases
     
     enum Something
@@ -46,8 +64,26 @@ enum ColorPicker
             let errorString: String?
         }
     }
+    
+    enum UpdateMotionSensorState
+    {
+        struct Request
+        {
+            let isEnabled: Bool
+        }
+        
+        struct Response
+        {
+            let error: Error?
+        }
+        
+        struct ViewModel
+        {
+            let errorString: String?
+        }
+    }
 
-    enum CurrentColor
+    enum CurrentState
     {
         struct Request
         {
@@ -58,11 +94,13 @@ enum ColorPicker
             let red: UInt8
             let green: UInt8
             let blue: UInt8
+            let isMotionSensorEnabled: Bool
         }
         
         struct ViewModel
         {
             let color: UIColor
+            let isMotionSensorEnabled: Bool
             let errorString: String?
         }
     }
